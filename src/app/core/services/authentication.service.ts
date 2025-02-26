@@ -1,6 +1,7 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable, inject } from "@angular/core";
 import { environment } from "../../../environments/environment";
+import { Observable } from "rxjs";
 
 @Injectable({
   providedIn: "root",
@@ -21,5 +22,16 @@ export class AuthenticationService {
       `state=${this.state}`;
 
     window.location.href = authRedirectUrl;
+  }
+
+  exchangeAuthorizationCodeForToken(code: string): Observable<any> {
+    const headers = new HttpHeaders({
+      "Content-Type": "application/x-www-form-urlencoded",
+    });
+
+    return this.httpClient.post(
+      `https://localhost:7061/retrieve-token/?code=${code}`,
+      { headers }
+    );
   }
 }

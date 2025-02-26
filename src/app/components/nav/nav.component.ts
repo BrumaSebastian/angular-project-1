@@ -1,6 +1,6 @@
 import { Component, inject } from "@angular/core";
 import { BreakpointObserver, Breakpoints } from "@angular/cdk/layout";
-import { AsyncPipe } from "@angular/common";
+import { AsyncPipe, isPlatformBrowser } from "@angular/common";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { MatButtonModule } from "@angular/material/button";
 import { MatSidenavModule } from "@angular/material/sidenav";
@@ -10,6 +10,7 @@ import { Observable } from "rxjs";
 import { map, shareReplay } from "rxjs/operators";
 import { AuthenticationService } from "../../core/services/authentication.service";
 import { RouterOutlet } from "@angular/router";
+import { PLATFORM_ID } from "@angular/core";
 
 @Component({
   selector: "app-nav",
@@ -29,6 +30,11 @@ import { RouterOutlet } from "@angular/router";
 export class NavComponent {
   private breakpointObserver = inject(BreakpointObserver);
   private authService = inject(AuthenticationService);
+  private platformId = inject(PLATFORM_ID);
+
+  constructor() {
+    console.log(this.platformId);
+  }
 
   isHandset$: Observable<boolean> = this.breakpointObserver
     .observe(Breakpoints.Handset)
