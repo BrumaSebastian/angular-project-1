@@ -28,7 +28,12 @@
       }
       <span>Home</span>
       <span class="example-spacer"></span>
+
+      @if (isAuthenticated() ) {
+      <button mat-raised-button (click)="logout()">Logout</button>
+      } @else {
       <button mat-raised-button (click)="authenticate()">Login</button>
+      }
     </mat-toolbar>
 
     <main class="content">

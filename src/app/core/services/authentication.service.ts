@@ -1,19 +1,25 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { Injectable, inject } from "@angular/core";
-import { environment } from "../../../environments/environment";
-import { Observable } from "rxjs";
+import { isPlatformBrowser } from '@angular/common';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Injectable, PLATFORM_ID, inject } from '@angular/core';
+import { environment } from '../../../environments/environment';
+import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class AuthenticationService {
   private httpClient = inject(HttpClient);
-  private responseType = "code";
-  private scope = "openid offline_access profile email";
-  private state = "random_string_for_csrf";
+  private responseType = 'code';
+  private scope = 'openid offline_access profile email';
+  private state = 'random_string_for_csrf';
+  private isBrowser: boolean;
 
-  private accessToken: string | null = null;
-  private refreshToken: string | null = null;
+  readonly accessToken: string = 'accessToken';
+  readonly refreshToken: string = 'refreshToken';
+
+  constructor() {
+    this.isBrowser = isPlatformBrowser(PLATFORM_ID);
+  }
 
   redirectToAuthentication() {
     const authRedirectUrl =
@@ -27,9 +33,29 @@ export class AuthenticationService {
     window.location.href = authRedirectUrl;
   }
 
+  redirectToLogout() {
+    const logoutUrl = `${environment.logoutUri}?redirect_uri=http://localhost:4200/`;
+    // this.removeTokens();
+    // window.location.href = logoutUrl;
+
+    this.httpClient
+      .get(
+        `http://localhost:9000/application/o/dev-authentication-app/end-session/?redirect_uri=http://localhost:4200/`,
+        {}
+      )
+      .subscribe({
+        next: (response: any) => {
+          console.log(response);
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
+  }
+
   exchangeAuthorizationCodeForToken(code: string): Observable<any> {
     const headers = new HttpHeaders({
-      "Content-Type": "application/x-www-form-urlencoded",
+      'Content-Type': 'application/x-www-form-urlencoded',
     });
 
     return this.httpClient.post(
@@ -39,15 +65,24 @@ export class AuthenticationService {
   }
 
   setTokens(accessToken: string, refreshToken: string) {
-    this.accessToken = accessToken;
-    this.refreshToken = refreshToken;
+    localStorage.setItem(this.accessToken, accessToken);
+    localStorage.setItem(this.refreshToken, refreshToken);
+  }
+
+  removeTokens() {
+    localStorage.removeItem(this.accessToken);
+    localStorage.removeItem(this.refreshToken);
   }
 
   getAccessToken(): string | null {
-    return this.accessToken;
+    return localStorage.getItem(this.accessToken);
+  }
+
+  getRefreshToken(): string | null {
+    return localStorage.getItem(this.refreshToken);
   }
 
   isLoggedIn(): boolean {
-    return !!this.accessToken;
+    return !!this.accessToken && !!this.refreshToken;
   }
 }
