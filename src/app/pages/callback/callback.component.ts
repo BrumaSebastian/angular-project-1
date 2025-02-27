@@ -21,25 +21,25 @@ export class CallbackComponent {
       const authorizationCode = urlParams.get("code");
       console.log(this.platformId);
 
-      // if (authorizationCode) {
-      //   this.authenticationService
-      //     .exchangeAuthorizationCodeForToken(authorizationCode)
-      //     .subscribe({
-      //       next: (response: AuthorizationInfo) => {
-      //         console.log(response);
-      //         // this.authTokenService.setTokens(
-      //         //   response.accessToken,
-      //         //   response.refreshToken
-      //         // );
-      //         // console.log(this.authTokenService.getAccessToken());
-      //         // console.log(this.authTokenService.getRefreshToken());
-      //         // this.router.navigate(['/dashboard']);
-      //       },
-      //       error: (err: ErrorMessage) => {
-      //         console.log(err);
-      //       },
-      //     });
-      // }
+      if (authorizationCode) {
+        this.authenticationService
+          .exchangeAuthorizationCodeForToken(authorizationCode)
+          .subscribe({
+            next: (response: AuthorizationInfo) => {
+              console.log(response);
+              // this.authTokenService.setTokens(
+              //   response.accessToken,
+              //   response.refreshToken
+              // );
+              // console.log(this.authTokenService.getAccessToken());
+              // console.log(this.authTokenService.getRefreshToken());
+              // this.router.navigate(['/dashboard']);
+            },
+            error: (err: ErrorMessage) => {
+              console.log(err);
+            },
+          });
+      }
     }
   }
 }

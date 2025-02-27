@@ -33,7 +33,7 @@ export class NavComponent {
   private platformId = inject(PLATFORM_ID);
 
   constructor() {
-    console.log(this.platformId);
+    // console.log(this.platformId);
   }
 
   isHandset$: Observable<boolean> = this.breakpointObserver
