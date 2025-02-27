@@ -7,4 +7,6 @@ export const environment = {
   clientSecret:
     "kvV1ylH3DTTJivWb0wrgNURrFehqu9oinX1V3FJAlJYTnKcwRlJFX4ZmnLXF67E3vzKM0GwLhiu4BNZ7T1K3jc0HpVe5zlv1zGSWNkCLabRfxXBMavkIi2mLEmMn1UfE",
   redirectUri: "http://localhost:4200/callback",
+  dotnetBackEndUrl: "https://localhost:7061/",
+  dotnetBackEndRetrieveTokenEndpoint: "retrieve-token/",
 };

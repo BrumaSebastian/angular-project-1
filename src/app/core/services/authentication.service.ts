@@ -12,6 +12,9 @@ export class AuthenticationService {
   private scope = "openid offline_access profile email";
   private state = "random_string_for_csrf";
 
+  private accessToken: string | null = null;
+  private refreshToken: string | null = null;
+
   redirectToAuthentication() {
     const authRedirectUrl =
       `${environment.authUri}?` +
@@ -30,8 +33,21 @@ export class AuthenticationService {
     });
 
     return this.httpClient.post(
-      `https://localhost:7061/retrieve-token/?code=${code}`,
+      `${environment.dotnetBackEndUrl}${environment.dotnetBackEndRetrieveTokenEndpoint}?code=${code}`,
       { headers }
     );
+  }
+
+  setTokens(accessToken: string, refreshToken: string) {
+    this.accessToken = accessToken;
+    this.refreshToken = refreshToken;
+  }
+
+  getAccessToken(): string | null {
+    return this.accessToken;
+  }
+
+  isLoggedIn(): boolean {
+    return !!this.accessToken;
   }
 }

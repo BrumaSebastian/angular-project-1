@@ -1,9 +1,10 @@
-import { Component, Inject, OnInit, inject } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { AuthenticationService } from "../../core/services/authentication.service";
 import { AuthorizationInfo } from "../../models/AuthorizationInfo";
 import { ErrorMessage } from "../../models/ErrorMessage";
 import { isPlatformBrowser } from "@angular/common";
 import { PLATFORM_ID } from "@angular/core";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-callback",
@@ -13,6 +14,7 @@ import { PLATFORM_ID } from "@angular/core";
 })
 export class CallbackComponent {
   private authenticationService = inject(AuthenticationService);
+  private router = inject(Router);
   private platformId = inject(PLATFORM_ID);
 
   constructor() {
@@ -27,13 +29,13 @@ export class CallbackComponent {
           .subscribe({
             next: (response: AuthorizationInfo) => {
               console.log(response);
-              // this.authTokenService.setTokens(
-              //   response.accessToken,
-              //   response.refreshToken
-              // );
-              // console.log(this.authTokenService.getAccessToken());
-              // console.log(this.authTokenService.getRefreshToken());
-              // this.router.navigate(['/dashboard']);
+              this.authenticationService.setTokens(
+                response.accessToken,
+                response.refreshToken
+              );
+              console.log(this.authenticationService.getAccessToken());
+              // console.log(this.authenticationService.getRefreshToken());
+              this.router.navigate(["/dashboard"]);
             },
             error: (err: ErrorMessage) => {
               console.log(err);
